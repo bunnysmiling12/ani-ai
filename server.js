@@ -247,9 +247,10 @@ app.use((error, req, res, next) => {
 
 // Initialize database and start server
 database.initialize().then(() => {
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     logger.info(`🚀 Ani.ai Content Creator server running on port ${PORT}`);
     logger.info(`🌐 Access your application at: http://localhost:${PORT}`);
+    logger.info(`🌐 Remote access available at: http://0.0.0.0:${PORT}`);
   });
 }).catch(error => {
   logger.error('Failed to initialize database:', error);
