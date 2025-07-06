@@ -1,12 +1,8 @@
-const OpenAI = require('openai');
+const axios = require('axios');
 const winston = require('winston');
 
 class ContentGenerator {
   constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY || 'demo-key-for-testing'
-    });
-    
     this.logger = winston.createLogger({
       level: 'info',
       format: winston.format.json(),
@@ -41,6 +37,31 @@ class ContentGenerator {
         "Peace comes from within. Do not seek it without. In the stillness of the mind, you find your true self. Mindfulness is about being present, not perfect. Every breath is a new beginning, every moment a fresh start. Your thoughts create your reality. Choose them wisely.",
         "The present moment is the only time over which we have dominion. Yesterday is history, tomorrow is a mystery, today is a gift. That's why it's called the present. Meditation is not about stopping thoughts, it's about observing them. Find your center.",
         "Mindfulness is a way of befriending ourselves and our experience. It's about paying attention to what's happening right now with kindness and curiosity. When you change the way you look at things, the things you look at change. Inner peace is the new success."
+      ],
+      adventure: [
+        "Life is either a daring adventure or nothing at all. The world is a book, and those who do not travel read only one page. Adventure awaits outside your comfort zone. Take the path less traveled, embrace the unknown, create memories that last forever.",
+        "Mountains don't care about your fears, oceans don't mind your doubts. Nature calls to the wild in your heart. Every journey begins with a single step into the unknown. Pack light, dream big, and let adventure be your guide.",
+        "The greatest adventures happen when you say yes to the unknown. Life is too short for someday dreams. Explore the unexplored, climb the unclimbed, discover the undiscovered. Your next adventure is waiting for you to be brave enough to begin."
+      ],
+      'personal-growth': [
+        "Growth begins at the end of your comfort zone. Every day is a chance to become a better version of yourself. The person you are today is not the person you have to be tomorrow. Embrace change, welcome challenges, celebrate progress.",
+        "You are not who you were yesterday, and you're not who you'll be tomorrow. Personal growth is a journey, not a destination. Be patient with yourself, kind to your struggles, and proud of how far you've come.",
+        "The only person you need to be better than is the person you were yesterday. Personal growth requires honest self-reflection, uncomfortable truths, and the courage to change. Your potential is unlimited when you commit to growth."
+      ],
+      technology: [
+        "Technology is not just about gadgets and code. It's about solving problems, connecting people, and creating a better future. Innovation happens when curiosity meets opportunity. The future belongs to those who embrace change and adapt quickly.",
+        "Every great technology started with someone asking 'what if?' The impossible becomes possible when brilliant minds work together. Technology amplifies human potential and connects us in ways we never imagined.",
+        "Artificial intelligence, virtual reality, quantum computing – we're living in the future that science fiction writers dreamed about. Technology moves fast, but human creativity moves faster. Be part of the solution, not just a user of it."
+      ],
+      lifestyle: [
+        "Your lifestyle is a reflection of your priorities. Small daily choices create big life changes. Live intentionally, love deeply, laugh often. Balance is not something you find, it's something you create every day.",
+        "A great life is made up of great days. Start each morning with gratitude, fill each hour with purpose, end each day with reflection. Your lifestyle should energize you, not drain you. Choose habits that serve your highest self.",
+        "Lifestyle is not about what you own, it's about how you live. Prioritize experiences over possessions, relationships over achievements, memories over money. Live a life that feels good on the inside, not just one that looks good on the outside."
+      ],
+      education: [
+        "Education is the most powerful weapon you can use to change the world. Learning never stops, curiosity never dies. Every book you read, every skill you learn, every question you ask makes you more powerful.",
+        "The beautiful thing about learning is that nobody can take it away from you. Education is not preparation for life, education is life itself. Stay curious, ask questions, never stop growing your mind.",
+        "Knowledge is power, but applied knowledge is transformation. The goal of education is not to increase the amount of knowledge, but to create possibilities for a child to invent and discover. Learn something new every day."
       ]
     };
   }
@@ -49,44 +70,57 @@ class ContentGenerator {
     try {
       this.logger.info(`Generating script for category: ${category}`);
       
-      // If OpenAI API is not available, use demo scripts
-      if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'demo-key-for-testing') {
-        return this.getDemoScript(category);
-      }
-      
-      const prompt = this.buildPrompt(category, theme, tone);
-      
-      const response = await this.openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content: "You are a master storyteller and content creator. Create engaging, motivational, and inspiring short-form video scripts that captivate audiences and drive engagement. Focus on emotional connection and clear, impactful messaging."
-          },
-          {
-            role: "user",
-            content: prompt
+      // Try OpenAI API if key is available and not demo
+      if (process.env.OPENAI_API_KEY && 
+          process.env.OPENAI_API_KEY !== 'demo-key-for-testing' && 
+          !process.env.DEMO_MODE) {
+        
+        try {
+          const prompt = this.buildPrompt(category, theme, tone);
+          
+          const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model: "gpt-3.5-turbo",
+            messages: [
+              {
+                role: "system",
+                content: "You are a master storyteller and content creator. Create engaging, motivational, and inspiring short-form video scripts that captivate audiences and drive engagement. Focus on emotional connection and clear, impactful messaging."
+              },
+              {
+                role: "user",
+                content: prompt
+              }
+            ],
+            max_tokens: 300,
+            temperature: 0.8
+          }, {
+            headers: {
+              'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          const script = response.data.choices[0].message.content.trim();
+          
+          // Validate script length (should be 50-60 seconds when spoken)
+          const wordCount = script.split(' ').length;
+          if (wordCount < 80 || wordCount > 120) {
+            return this.adjustScriptLength(script, wordCount);
           }
-        ],
-        max_tokens: 300,
-        temperature: 0.8
-      });
-      
-      const script = response.choices[0].message.content.trim();
-      
-      // Validate script length (should be 50-60 seconds when spoken)
-      const wordCount = script.split(' ').length;
-      if (wordCount < 80 || wordCount > 120) {
-        return this.adjustScriptLength(script, wordCount);
+          
+          this.logger.info(`Generated script with ${wordCount} words`);
+          return script;
+          
+        } catch (error) {
+          this.logger.error('Error with OpenAI API:', error.message);
+          // Fall through to demo scripts
+        }
       }
       
-      this.logger.info(`Generated script with ${wordCount} words`);
-      return script;
+      // Use demo scripts
+      return this.getDemoScript(category);
       
     } catch (error) {
-      this.logger.error('Error generating script with OpenAI:', error);
-      
-      // Fallback to demo scripts if OpenAI fails
+      this.logger.error('Error generating script:', error);
       return this.getDemoScript(category);
     }
   }

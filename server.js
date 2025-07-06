@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const dotenv = require('dotenv');
-const multer = require('multer');
 const cron = require('node-cron');
 const winston = require('winston');
 
@@ -35,12 +34,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Configure multer for file uploads
-const upload = multer({
-  dest: 'uploads/',
-  limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
-});
+app.use(express.static('.'));
 
 // Initialize services
 const contentGenerator = new ContentGenerator();

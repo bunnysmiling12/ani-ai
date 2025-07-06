@@ -1,1 +1,492 @@
-<!DOCTYPE html><html><head><title>Ani.ai</title></head><body><h1>Welcome to Ani.ai</h1></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ani.ai - AI Content Creator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <h1>Ani.ai</h1>
+                <span class="tagline">AI Content Creator</span>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </button>
+                <button class="nav-btn" data-section="create">
+                    <i class="fas fa-plus-circle"></i>
+                    Create Content
+                </button>
+                <button class="nav-btn" data-section="history">
+                    <i class="fas fa-history"></i>
+                    History
+                </button>
+                <button class="nav-btn" data-section="analytics">
+                    <i class="fas fa-chart-line"></i>
+                    Analytics
+                </button>
+                <button class="nav-btn" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </button>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="section-header">
+                    <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                    <p>Welcome to your AI-powered content creation hub</p>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-file-text"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="total-scripts">0</h3>
+                                <p>Total Scripts</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="total-videos">0</h3>
+                                <p>Videos Created</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-share"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="total-posts">0</h3>
+                                <p>Posts Published</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="total-views">0</h3>
+                                <p>Total Views</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <h3>Quick Actions</h3>
+                        <div class="action-buttons">
+                            <button class="action-btn" onclick="switchSection('create')">
+                                <i class="fas fa-plus"></i>
+                                Create New Content
+                            </button>
+                            <button class="action-btn" onclick="generateRandomContent()">
+                                <i class="fas fa-random"></i>
+                                Generate Random
+                            </button>
+                            <button class="action-btn" onclick="viewAnalytics()">
+                                <i class="fas fa-chart-bar"></i>
+                                View Analytics
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recent Content -->
+                    <div class="recent-content">
+                        <h3>Recent Content</h3>
+                        <div id="recent-content-list" class="content-list">
+                            <!-- Recent content will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Status Panel -->
+                    <div class="status-panel">
+                        <h3>System Status</h3>
+                        <div class="status-items">
+                            <div class="status-item">
+                                <i class="fas fa-circle status-online"></i>
+                                <span>AI Engine: Online</span>
+                            </div>
+                            <div class="status-item">
+                                <i class="fas fa-circle status-online"></i>
+                                <span>Video Generator: Ready</span>
+                            </div>
+                            <div class="status-item">
+                                <i class="fas fa-circle status-online"></i>
+                                <span>Social Media: Connected</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Create Content Section -->
+            <section id="create" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-plus-circle"></i> Create New Content</h2>
+                    <p>Generate amazing AI-powered content in seconds</p>
+                </div>
+
+                <div class="create-content-grid">
+                    <!-- Category Selection -->
+                    <div class="category-selection">
+                        <h3>Choose a Category</h3>
+                        <div class="category-grid" id="category-grid">
+                            <!-- Categories will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Content Options -->
+                    <div class="content-options">
+                        <h3>Content Settings</h3>
+                        <div class="options-form">
+                            <div class="form-group">
+                                <label for="theme-input">Theme (Optional)</label>
+                                <input type="text" id="theme-input" placeholder="Enter a specific theme...">
+                            </div>
+                            <div class="form-group">
+                                <label for="tone-select">Tone</label>
+                                <select id="tone-select">
+                                    <option value="inspirational">Inspirational</option>
+                                    <option value="motivational">Motivational</option>
+                                    <option value="energetic">Energetic</option>
+                                    <option value="calm">Calm</option>
+                                    <option value="professional">Professional</option>
+                                    <option value="casual">Casual</option>
+                                    <option value="dramatic">Dramatic</option>
+                                    <option value="humorous">Humorous</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="voice-select">Voice Style</label>
+                                <select id="voice-select">
+                                    <option value="male-confident">Male - Confident</option>
+                                    <option value="female-warm">Female - Warm</option>
+                                    <option value="male-energetic">Male - Energetic</option>
+                                    <option value="female-professional">Female - Professional</option>
+                                    <option value="neutral-calm">Neutral - Calm</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="visual-style">Visual Style</label>
+                                <select id="visual-style">
+                                    <option value="auto">Auto-Select</option>
+                                    <option value="modern">Modern</option>
+                                    <option value="minimal">Minimal</option>
+                                    <option value="vibrant">Vibrant</option>
+                                    <option value="elegant">Elegant</option>
+                                    <option value="bold">Bold</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media Platforms -->
+                    <div class="platform-selection">
+                        <h3>Social Media Platforms</h3>
+                        <div class="platform-grid">
+                            <label class="platform-item">
+                                <input type="checkbox" name="platforms" value="instagram" checked>
+                                <i class="fab fa-instagram"></i>
+                                <span>Instagram</span>
+                            </label>
+                            <label class="platform-item">
+                                <input type="checkbox" name="platforms" value="youtube" checked>
+                                <i class="fab fa-youtube"></i>
+                                <span>YouTube</span>
+                            </label>
+                            <label class="platform-item">
+                                <input type="checkbox" name="platforms" value="twitter" checked>
+                                <i class="fab fa-twitter"></i>
+                                <span>Twitter</span>
+                            </label>
+                            <label class="platform-item">
+                                <input type="checkbox" name="platforms" value="tiktok">
+                                <i class="fab fa-tiktok"></i>
+                                <span>TikTok</span>
+                            </label>
+                            <label class="platform-item">
+                                <input type="checkbox" name="platforms" value="facebook">
+                                <i class="fab fa-facebook"></i>
+                                <span>Facebook</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Generation Panel -->
+                    <div class="generation-panel">
+                        <h3>Generate Content</h3>
+                        <div class="generation-steps">
+                            <div class="step" id="step-1">
+                                <i class="fas fa-file-text"></i>
+                                <span>Generate Script</span>
+                            </div>
+                            <div class="step" id="step-2">
+                                <i class="fas fa-video"></i>
+                                <span>Create Video</span>
+                            </div>
+                            <div class="step" id="step-3">
+                                <i class="fas fa-share"></i>
+                                <span>Post to Social</span>
+                            </div>
+                        </div>
+                        <button id="generate-btn" class="generate-btn">
+                            <i class="fas fa-magic"></i>
+                            Generate Content
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Generated Content Display -->
+                <div id="generated-content" class="generated-content" style="display: none;">
+                    <h3>Generated Content</h3>
+                    <div class="content-display">
+                        <div class="script-display">
+                            <h4>Script</h4>
+                            <div id="generated-script" class="script-text"></div>
+                        </div>
+                        <div class="video-display">
+                            <h4>Video</h4>
+                            <div id="video-container" class="video-container">
+                                <div class="video-placeholder">
+                                    <i class="fas fa-video"></i>
+                                    <p>Video will appear here</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="actions-display">
+                            <button class="action-btn" onclick="downloadVideo()">
+                                <i class="fas fa-download"></i>
+                                Download Video
+                            </button>
+                            <button class="action-btn" onclick="regenerateContent()">
+                                <i class="fas fa-redo"></i>
+                                Regenerate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section id="history" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-history"></i> Content History</h2>
+                    <p>Browse all your generated content</p>
+                </div>
+
+                <div class="history-controls">
+                    <div class="search-box">
+                        <input type="text" id="search-input" placeholder="Search content...">
+                        <button onclick="searchContent()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="filter-controls">
+                        <select id="category-filter">
+                            <option value="">All Categories</option>
+                        </select>
+                        <select id="date-filter">
+                            <option value="">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="history-content" class="history-grid">
+                    <!-- History content will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-line"></i> Analytics</h2>
+                    <p>Track your content performance</p>
+                </div>
+
+                <div class="analytics-grid">
+                    <!-- Performance Overview -->
+                    <div class="analytics-card">
+                        <h3>Performance Overview</h3>
+                        <div class="metrics-grid">
+                            <div class="metric">
+                                <i class="fas fa-eye"></i>
+                                <span class="metric-value" id="analytics-views">0</span>
+                                <span class="metric-label">Total Views</span>
+                            </div>
+                            <div class="metric">
+                                <i class="fas fa-heart"></i>
+                                <span class="metric-value" id="analytics-likes">0</span>
+                                <span class="metric-label">Total Likes</span>
+                            </div>
+                            <div class="metric">
+                                <i class="fas fa-share"></i>
+                                <span class="metric-value" id="analytics-shares">0</span>
+                                <span class="metric-label">Total Shares</span>
+                            </div>
+                            <div class="metric">
+                                <i class="fas fa-percentage"></i>
+                                <span class="metric-value" id="analytics-engagement">0%</span>
+                                <span class="metric-label">Engagement Rate</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Performance -->
+                    <div class="analytics-card">
+                        <h3>Category Performance</h3>
+                        <div id="category-performance" class="category-performance">
+                            <!-- Category performance will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Platform Performance -->
+                    <div class="analytics-card">
+                        <h3>Platform Performance</h3>
+                        <div id="platform-performance" class="platform-performance">
+                            <!-- Platform performance will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Top Performing Content -->
+                    <div class="analytics-card">
+                        <h3>Top Performing Content</h3>
+                        <div id="top-content" class="top-content">
+                            <!-- Top content will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-cog"></i> Settings</h2>
+                    <p>Configure your AI content creator</p>
+                </div>
+
+                <div class="settings-grid">
+                    <!-- Social Media Configuration -->
+                    <div class="settings-card">
+                        <h3>Social Media Accounts</h3>
+                        <div class="social-config">
+                            <div class="platform-config">
+                                <i class="fab fa-instagram"></i>
+                                <span>Instagram</span>
+                                <button class="config-btn">Configure</button>
+                            </div>
+                            <div class="platform-config">
+                                <i class="fab fa-youtube"></i>
+                                <span>YouTube</span>
+                                <button class="config-btn">Configure</button>
+                            </div>
+                            <div class="platform-config">
+                                <i class="fab fa-twitter"></i>
+                                <span>Twitter</span>
+                                <button class="config-btn">Configure</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Configuration -->
+                    <div class="settings-card">
+                        <h3>AI Settings</h3>
+                        <div class="ai-config">
+                            <div class="config-item">
+                                <label>OpenAI API Key</label>
+                                <input type="password" id="openai-key" placeholder="Enter your OpenAI API key">
+                            </div>
+                            <div class="config-item">
+                                <label>Content Generation Frequency</label>
+                                <select id="generation-frequency">
+                                    <option value="6">Every 6 hours</option>
+                                    <option value="12">Every 12 hours</option>
+                                    <option value="24">Daily</option>
+                                    <option value="168">Weekly</option>
+                                </select>
+                            </div>
+                            <div class="config-item">
+                                <label>Auto-Post to Social Media</label>
+                                <input type="checkbox" id="auto-post" checked>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preferences -->
+                    <div class="settings-card">
+                        <h3>Preferences</h3>
+                        <div class="preferences-config">
+                            <div class="config-item">
+                                <label>Default Content Category</label>
+                                <select id="default-category">
+                                    <option value="motivation">Motivation</option>
+                                    <option value="fitness">Fitness</option>
+                                    <option value="business">Business</option>
+                                    <option value="love">Love</option>
+                                    <option value="mindfulness">Mindfulness</option>
+                                </select>
+                            </div>
+                            <div class="config-item">
+                                <label>Default Voice Style</label>
+                                <select id="default-voice">
+                                    <option value="male-confident">Male - Confident</option>
+                                    <option value="female-warm">Female - Warm</option>
+                                    <option value="male-energetic">Male - Energetic</option>
+                                    <option value="female-professional">Female - Professional</option>
+                                </select>
+                            </div>
+                            <div class="config-item">
+                                <label>Notifications</label>
+                                <input type="checkbox" id="notifications" checked>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="save-settings-btn">
+                    <i class="fas fa-save"></i>
+                    Save Settings
+                </button>
+            </section>
+        </main>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p id="loading-text">Generating content...</p>
+            </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div id="notification-toast" class="notification-toast">
+            <i class="fas fa-check-circle"></i>
+            <span id="notification-message"></span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
