@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Ani.ai - AI Content Creator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .section {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .category-card.selected {
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .category-card .emoji {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .category-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .category-card p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .script-display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #ffd700;
+        }
+
+        .script-display h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .script-display p {
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 2s ease;
+        }
+
+        .content-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .content-item .date {
+            color: #ffd700;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .content-item .title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .content-item .description {
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #ffd700;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid #2ecc71;
+            color: #2ecc71;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .form-group {
+            margin: 20px 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .categories {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🤖 Ani.ai</h1>
+            <p class="tagline">AI Content Creator - Create Amazing Videos Instantly!</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav">
+            <button class="nav-btn active" onclick="showSection('dashboard')">🏠 Dashboard</button>
+            <button class="nav-btn" onclick="showSection('create')">🎬 Create Content</button>
+            <button class="nav-btn" onclick="showSection('history')">📚 History</button>
+            <button class="nav-btn" onclick="showSection('analytics')">📊 Analytics</button>
+            <button class="nav-btn" onclick="showSection('settings')">⚙️ Settings</button>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section active">
+            <h2>🏠 Welcome to Your AI Content Studio!</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="number" id="totalScripts">0</div>
+                    <div class="label">Scripts Generated</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="totalVideos">0</div>
+                    <div class="label">Videos Created</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="totalPosts">0</div>
+                    <div class="label">Social Media Posts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="totalViews">0</div>
+                    <div class="label">Total Views</div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn" onclick="showSection('create')">🚀 Start Creating Content</button>
+            </div>
+        </div>
+
+        <!-- Create Content Section -->
+        <div id="create" class="section">
+            <h2>🎬 Create Amazing Content</h2>
+            
+            <h3 style="margin: 30px 0 20px 0;">📋 Step 1: Choose Your Category</h3>
+            <div class="categories">
+                <div class="category-card" onclick="selectCategory('motivation')">
+                    <div class="emoji">🔥</div>
+                    <h3>Motivation</h3>
+                    <p>Inspiring and uplifting content</p>
+                </div>
+                <div class="category-card" onclick="selectCategory('fitness')">
+                    <div class="emoji">💪</div>
+                    <h3>Fitness</h3>
+                    <p>Health and workout motivation</p>
+                </div>
+                <div class="category-card" onclick="selectCategory('love')">
+                    <div class="emoji">❤️</div>
+                    <h3>Love</h3>
+                    <p>Relationship and romance advice</p>
+                </div>
+                <div class="category-card" onclick="selectCategory('business')">
+                    <div class="emoji">💼</div>
+                    <h3>Business</h3>
+                    <p>Entrepreneurship and success</p>
+                </div>
+                <div class="category-card" onclick="selectCategory('mindfulness')">
+                    <div class="emoji">🧠</div>
+                    <h3>Mindfulness</h3>
+                    <p>Mental health and wellness</p>
+                </div>
+                <div class="category-card" onclick="selectCategory('lifestyle')">
+                    <div class="emoji">🌟</div>
+                    <h3>Lifestyle</h3>
+                    <p>Daily life and habits</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <button class="btn" id="generateBtn" onclick="generateScript()" disabled>✨ Generate Script</button>
+                <button class="btn" id="createVideoBtn" onclick="createVideo()" disabled>🎥 Create Video</button>
+                <button class="btn" id="postBtn" onclick="postToSocial()" disabled>📱 Post to Social Media</button>
+            </div>
+
+            <div id="scriptDisplay"></div>
+            <div id="videoDisplay"></div>
+            <div id="socialDisplay"></div>
+        </div>
+
+        <!-- History Section -->
+        <div id="history" class="section">
+            <h2>📚 Your Content History</h2>
+            <div id="historyList">
+                <p style="text-align: center; opacity: 0.7; padding: 40px;">
+                    Your created content will appear here once you start generating scripts!
+                </p>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div id="analytics" class="section">
+            <h2>📊 Performance Analytics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="number">87%</div>
+                    <div class="label">Engagement Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">156K</div>
+                    <div class="label">Reach</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">2.4K</div>
+                    <div class="label">Shares</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">4.8★</div>
+                    <div class="label">Rating</div>
+                </div>
+            </div>
+            <div style="margin: 40px 0;">
+                <h3>📈 Growth Trends</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 85%;"></div>
+                </div>
+                <p style="text-align: center; margin: 20px 0;">Your content performance is excellent! 🚀</p>
+            </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settings" class="section">
+            <h2>⚙️ Settings</h2>
+            <div class="form-group">
+                <label>🤖 OpenAI API Key (Optional)</label>
+                <input type="password" placeholder="Enter your OpenAI API key for custom scripts">
+            </div>
+            <div class="form-group">
+                <label>⏰ Posting Schedule</label>
+                <select>
+                    <option>Every 6 hours</option>
+                    <option>Daily</option>
+                    <option>Every 2 days</option>
+                    <option>Weekly</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>📱 Social Media Platforms</label>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
+                    <label><input type="checkbox" checked> Instagram</label>
+                    <label><input type="checkbox" checked> YouTube</label>
+                    <label><input type="checkbox" checked> TikTok</label>
+                    <label><input type="checkbox" checked> Twitter</label>
+                    <label><input type="checkbox" checked> Facebook</label>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn">💾 Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let selectedCategory = '';
+        let currentScript = '';
+        let contentHistory = [];
+        let stats = {
+            totalScripts: 0,
+            totalVideos: 0,
+            totalPosts: 0,
+            totalViews: 0
+        };
+
+        // Navigation functions
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Update nav buttons
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Category selection
+        function selectCategory(category) {
+            selectedCategory = category;
+            
+            // Update visual selection
+            const cards = document.querySelectorAll('.category-card');
+            cards.forEach(card => card.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            // Enable generate button
+            document.getElementById('generateBtn').disabled = false;
+        }
+
+        // Sample scripts for different categories
+        const scriptTemplates = {
+            motivation: [
+                "🔥 STOP MAKING EXCUSES! Every champion was once a beginner who refused to give up. Your dreams are waiting for you to take that first step. Today isn't just another day – it's THE day you change everything! Success isn't about being perfect, it's about being persistent. What excuse will you eliminate today?",
+                "💪 You have 86,400 seconds today. How many will you waste? Champions don't wait for motivation – they CREATE it! Your biggest competitor isn't someone else, it's who you were yesterday. Stop waiting for tomorrow. Stop waiting for the 'right moment.' The right moment is NOW!",
+                "🚀 FAILURE is not the opposite of success – it's a stepping stone to it! Every 'NO' gets you closer to your 'YES.' Every setback is a setup for a comeback. You're not behind in life, you're exactly where you need to be to build the strength for what's coming next!"
+            ],
+            fitness: [
+                "💪 Your body can do it. It's your MIND you need to convince! Every rep, every step, every healthy choice is a vote for the person you're becoming. You don't have to be extreme, just consistent. 30 minutes today can change your next 30 years!",
+                "🏃‍♂️ EXCUSES will always be there for you. OPPORTUNITIES won't! Your health is an investment, not an expense. That workout you're putting off? Your future self is begging you to do it NOW. Strong bodies create strong minds!",
+                "🔥 You're not just building muscle – you're building CHARACTER! Every time you choose the gym over the couch, vegetables over junk food, you're becoming unstoppable. Your only competition is who you were yesterday!"
+            ],
+            love: [
+                "❤️ Real love isn't perfect – it's PATIENT. It's choosing each other every single day, especially on the days you don't feel like it. Love isn't just a feeling, it's a decision. A commitment. A daily choice to see the best in someone even when they're not at their best.",
+                "💕 Your person is out there, probably wondering if YOU exist! Stop settling for almost, stop accepting crumbs, stop thinking you're asking for too much. You deserve someone who chooses you without hesitation. Love yourself first – the right person will love your energy!",
+                "🌹 The best relationships aren't just about finding someone you can live WITH – they're about finding someone you can't live WITHOUT. Real love multiplies joy and divides sorrow. It's not 50/50, it's 100/100 from both people!"
+            ],
+            business: [
+                "💼 Your IDEA is not your business – your EXECUTION is! Stop waiting for perfect conditions. Start with what you have, where you are, with what you know. Every expert was once a beginner. Every empire was once a startup. Your time is NOW!",
+                "🚀 RISK is not the enemy – REGRET is! The biggest risk is not taking any risk at all. Your comfort zone is beautiful, but nothing grows there. Success isn't about avoiding failure – it's about failing faster and learning quicker than your competition!",
+                "💡 Your 9-to-5 is funding someone else's dream. When will you start funding YOUR OWN? Every hour you're not building your empire, you're building someone else's. Stop making other people rich and start making YOURSELF unstoppable!"
+            ],
+            mindfulness: [
+                "🧠 Peace isn't found in a perfect life – it's found in ACCEPTING an imperfect one. You can't control what happens TO you, but you can control what happens WITHIN you. Breathe. Reset. Begin again. This moment is all you truly have.",
+                "🌸 Your anxiety is not your identity. Your depression is not your destiny. Your past is not your prison. You are not broken – you're BREAKING THROUGH. Healing isn't linear, progress isn't perfect, but you're exactly where you need to be right now.",
+                "✨ Stop trying to control everything and start TRUSTING everything. The universe has a plan even when you can't see it. What's meant for you will find you. What's not meant for you will pass by you. Surrender control and find your peace."
+            ],
+            lifestyle: [
+                "🌟 Your life is not a dress rehearsal – THIS IS IT! Stop saving your good china for special occasions. Stop waiting for life to begin. Stop postponing joy. Every ordinary day is an extraordinary gift. How will you make today AMAZING?",
+                "☀️ Good vibes don't happen by accident – they happen by INTENTION! Surround yourself with people who inspire you, challenge you, and celebrate you. Your energy introduces you before you even speak. What energy are you bringing?",
+                "🎯 Small daily improvements lead to MASSIVE lifetime results! Read 10 pages, walk 10 minutes, drink one extra glass of water. Success isn't about giant leaps – it's about consistent baby steps in the right direction. What tiny habit will you start today?"
+            ]
+        };
+
+        // Generate script function
+        function generateScript() {
+            if (!selectedCategory) return;
+            
+            // Show loading
+            document.getElementById('scriptDisplay').innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>🤖 AI is generating your ${selectedCategory} script...</p>
+                </div>
+            `;
+            
+            // Simulate AI generation delay
+            setTimeout(() => {
+                const scripts = scriptTemplates[selectedCategory];
+                currentScript = scripts[Math.floor(Math.random() * scripts.length)];
+                
+                document.getElementById('scriptDisplay').innerHTML = `
+                    <div class="script-display">
+                        <h3>✨ Generated ${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Script</h3>
+                        <p>${currentScript}</p>
+                    </div>
+                    <div class="success-message">
+                        🎉 Perfect! Your engaging ${selectedCategory} script is ready for video creation!
+                    </div>
+                `;
+                
+                // Enable create video button
+                document.getElementById('createVideoBtn').disabled = false;
+                
+                // Update stats
+                stats.totalScripts++;
+                updateStats();
+                
+                // Add to history
+                addToHistory('Script Generated', `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} script created`, currentScript);
+                
+            }, 2000);
+        }
+
+        // Create video function
+        function createVideo() {
+            if (!currentScript) return;
+            
+            // Show loading
+            document.getElementById('videoDisplay').innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>🎬 Creating your video with AI voice and visuals...</p>
+                </div>
+            `;
+            
+            // Simulate video creation delay
+            setTimeout(() => {
+                document.getElementById('videoDisplay').innerHTML = `
+                    <div class="script-display">
+                        <h3>🎥 Video Created Successfully!</h3>
+                        <p><strong>📹 Video Specs:</strong></p>
+                        <p>• Duration: 58 seconds</p>
+                        <p>• Resolution: 1080x1920 (Instagram/TikTok optimized)</p>
+                        <p>• AI Voice: Natural, engaging tone</p>
+                        <p>• Visuals: Dynamic text animations with background</p>
+                        <p>• Captions: Auto-generated with perfect timing</p>
+                        <p>• Music: Motivational background track</p>
+                    </div>
+                    <div class="success-message">
+                        🚀 Amazing! Your video is ready to captivate audiences across all platforms!
+                    </div>
+                `;
+                
+                // Enable post button
+                document.getElementById('postBtn').disabled = false;
+                
+                // Update stats
+                stats.totalVideos++;
+                updateStats();
+                
+                // Add to history
+                addToHistory('Video Created', `${selectedCategory} video with AI voice and visuals`, 'Video file: ani_ai_content_' + Date.now() + '.mp4');
+                
+            }, 3000);
+        }
+
+        // Post to social media function
+        function postToSocial() {
+            if (!currentScript) return;
+            
+            // Show loading
+            document.getElementById('socialDisplay').innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>📱 Posting to all your social media platforms...</p>
+                </div>
+            `;
+            
+            // Simulate posting delay
+            setTimeout(() => {
+                document.getElementById('socialDisplay').innerHTML = `
+                    <div class="script-display">
+                        <h3>📱 Posted Successfully to All Platforms!</h3>
+                        <p><strong>✅ Posted to:</strong></p>
+                        <p>• 📸 Instagram: Story & Reel posted</p>
+                        <p>• 🎬 YouTube: Short uploaded</p>
+                        <p>• 🎵 TikTok: Video published</p>
+                        <p>• 🐦 Twitter: Thread created</p>
+                        <p>• 👥 Facebook: Posted to page</p>
+                        <p><br><strong>📊 Auto-generated hashtags:</strong></p>
+                        <p>#motivation #inspiration #mindset #success #goals #hustle #entrepreneur #lifestyle #positivity #growth</p>
+                    </div>
+                    <div class="success-message">
+                        🎉 Congratulations! Your content is now live and reaching thousands of people!
+                    </div>
+                `;
+                
+                // Update stats
+                stats.totalPosts++;
+                stats.totalViews += Math.floor(Math.random() * 5000) + 1000;
+                updateStats();
+                
+                // Add to history
+                addToHistory('Social Media Posted', `Content posted to 5 platforms`, 'Estimated reach: ' + (Math.floor(Math.random() * 5000) + 1000) + ' people');
+                
+                // Reset for next creation
+                setTimeout(() => {
+                    resetCreationForm();
+                }, 3000);
+                
+            }, 2500);
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalScripts').textContent = stats.totalScripts;
+            document.getElementById('totalVideos').textContent = stats.totalVideos;
+            document.getElementById('totalPosts').textContent = stats.totalPosts;
+            document.getElementById('totalViews').textContent = stats.totalViews.toLocaleString();
+        }
+
+        // Add to history
+        function addToHistory(title, description, content) {
+            const historyItem = {
+                date: new Date().toLocaleString(),
+                title: title,
+                description: description,
+                content: content
+            };
+            
+            contentHistory.unshift(historyItem);
+            updateHistoryDisplay();
+        }
+
+        // Update history display
+        function updateHistoryDisplay() {
+            const historyList = document.getElementById('historyList');
+            
+            if (contentHistory.length === 0) {
+                historyList.innerHTML = `
+                    <p style="text-align: center; opacity: 0.7; padding: 40px;">
+                        Your created content will appear here once you start generating scripts!
+                    </p>
+                `;
+                return;
+            }
+            
+            historyList.innerHTML = contentHistory.map(item => `
+                <div class="content-item">
+                    <div class="date">${item.date}</div>
+                    <div class="title">${item.title}</div>
+                    <div class="description">${item.description}</div>
+                    <div style="margin-top: 10px; opacity: 0.6; font-size: 0.9rem;">${item.content.substring(0, 100)}${item.content.length > 100 ? '...' : ''}</div>
+                </div>
+            `).join('');
+        }
+
+        // Reset creation form
+        function resetCreationForm() {
+            selectedCategory = '';
+            currentScript = '';
+            
+            // Reset visual selection
+            const cards = document.querySelectorAll('.category-card');
+            cards.forEach(card => card.classList.remove('selected'));
+            
+            // Reset buttons
+            document.getElementById('generateBtn').disabled = true;
+            document.getElementById('createVideoBtn').disabled = true;
+            document.getElementById('postBtn').disabled = true;
+            
+            // Clear displays
+            document.getElementById('scriptDisplay').innerHTML = '';
+            document.getElementById('videoDisplay').innerHTML = '';
+            document.getElementById('socialDisplay').innerHTML = '';
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            updateHistoryDisplay();
+            
+            // Add some demo data for a more realistic feel
+            setTimeout(() => {
+                stats.totalViews = 1247;
+                updateStats();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
